@@ -1,0 +1,54 @@
+// schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" // ou o banco de dados que você está usando
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String     @id @default(uuid())
+  name      String
+  email     String     @unique
+  password  String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  customers Customer[]
+}
+
+model Customer {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  phone     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  sales     Sale[]
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Product {
+  id        String   @id @default(uuid())
+  name      String
+  price     Float
+  stock     Int
+  isDeleted Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  sales     Sale[]
+}
+
+model Sale {
+  id         String   @id @default(uuid())
+  customerId String   @map("customer_id") // Altere para String para corresponder ao campo id em Customer
+  productId  String   @map("product_id") // Altere para String para corresponder ao campo id em Product
+  quantity   Int
+  price      Float
+  createdAt  DateTime @default(now())
+  customer   Customer @relation(fields: [customerId], references: [id])
+  product    Product  @relation(fields: [productId], references: [id])
+}
