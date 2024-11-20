@@ -2,7 +2,7 @@
 export interface ICreateCustomer {
   name: string;
   email: string;
-  phone: string | null;
+  phone?: string | null;
   userId: string;
 }
 

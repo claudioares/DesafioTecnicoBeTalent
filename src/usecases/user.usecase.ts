@@ -56,7 +56,7 @@ export class UserUseCase {
             if (isPasswordCorrect) {
                 throw new Error('The new password cannot be the same as the current password.');
             }
-            
+
             const hashedPassword = await bcrypt.hash(_data.password, 10);
             _data.password = hashedPassword;
         }
@@ -66,10 +66,35 @@ export class UserUseCase {
         return updatedUser;
     };
 
-    //  async getById(id:string):Promise<IUser>{
-    //     return {id:'', email: '', password: ''}
-    // };
-    //  async delete(id:string):Promise<IUser>{
-    //     return {id:'', email: '', password: ''}
-    // };
+     async getById(id:string):Promise<IUser>{
+        if (!id) {
+            throw new Error("User ID is required!");
+        };
+
+        const user = await this.repositorie.getById(id);
+
+        if (!user) {
+            throw new Error("User not found");
+        };
+
+        // const { password, ...userWithoutPassword } = user;
+
+        return user;
+    };
+
+     async delete(id:string):Promise<IUser>{
+        if (!id) {
+            throw new Error("User ID is required!");
+        };
+
+        const user = await this.repositorie.getById(id);
+
+        if (!user) {
+            throw new Error("User not found");
+        };
+
+        const deletedUser = await this.repositorie.delete(id);
+
+         return deletedUser;
+    };
 }

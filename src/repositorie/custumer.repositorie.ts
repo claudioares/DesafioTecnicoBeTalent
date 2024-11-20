@@ -2,7 +2,7 @@ import { prisma } from "../DB/prisma.config";
 import { ICreateCustomer, ICustomer, IMethodsRepositoryCustomer, IUpdateCustomer } from "../interfaces/custumer.interface";
 
 export class MethodsRepositoryCustumer implements IMethodsRepositoryCustomer{
-    async create(data: ICreateCustomer): Promise<ICreateCustomer> {
+    async create(data: ICreateCustomer): Promise<ICustomer> {
         const resultDataBase = await prisma.customer.create({
             data: {
                 name: data.name,
