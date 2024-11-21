@@ -1,12 +1,18 @@
 import fastify, { FastifyInstance } from "fastify"
 import cors from "@fastify/cors";
-import { CreateUser } from "./routes/users/user.create";
+import { UserRouters } from "./routes/users/user.routers";
+import fastifyJwt from 'fastify-jwt';
 
 
 export class App {
     private app: FastifyInstance;
     constructor() {
-        this.app = fastify()
+        this.app = fastify();
+
+        this.app.register(fastifyJwt, {
+            secret: process.env.JWT_SECRET || 'yourSecretKey',
+            sign: { expiresIn: '1h' }, 
+        });
     }
 
 
@@ -22,6 +28,6 @@ export class App {
             origin: "*",
             methods: ['POST', 'DELETE', 'GET']
         });
-        this.app.register(CreateUser);
+        this.app.register(UserRouters);
     }
 }
